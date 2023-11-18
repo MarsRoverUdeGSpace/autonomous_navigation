@@ -1,0 +1,12 @@
+[submodule "navigation"]
+	path = navigation
+	url = https://github.com/ros-planning/navigation.git
+[submodule "nmea_navsat_driver"]
+	path = nmea_navsat_driver
+	url = https://github.com/ros-drivers/nmea_navsat_driver.git
+[submodule "octomap_mapping"]
+	path = octomap_mapping
+	url = https://github.com/OctoMap/octomap_mapping.git
+[submodule "teleop_twist_joy"]
+	path = teleop_twist_joy
+	url = https://github.com/ros-teleop/teleop_twist_joy.git
