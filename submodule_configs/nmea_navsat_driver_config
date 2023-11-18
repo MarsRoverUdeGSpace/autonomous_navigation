@@ -1,0 +1,44 @@
+
+GPS module configuration
+
+GPS used: Adafruit Ultimate GPS GNSS with USB
+Module name: nmea_navsat_driver
+Module docs: http://wiki.ros.org/nmea_navsat_driver
+Module GitHub: https://github.com/ros-drivers/nmea_navsat_driver
+
+
+Node Use
+
+Considerations before running node:
+
+    1. Power on the GPS and connect the antenna.
+    2. Check that there is a fix in the GPS by looking at the Fix led on it. I must blink once every 15 seconds if there is a fix.
+    3. Check that the baud rate of the port is 9600, if not, change it.
+        ◦ stty -F /dev/ttyUSB0
+    4. Set the permissions for the port
+        ◦ sudo chmod a+rw /dev/ttyUSB0
+
+Note: The issue with the permissions for /dev/ttyUSB0 can be permanently solved by adding yourself to the dialout group. You can do this with:
+
+sudo adduser <user> dialout
+
+Also useful is this command for listing your current groups, although you have to log out and log in before the serial port starts letting you in.
+
+groups <user>
+
+
+Running node manually
+
+rosrun nmea_navsat_driver nmea_serial_driver _port:=/dev/ttyUSB0 _baud:=9600
+
+Running node with lauch file
+
+roslaunch nmea_navsat_driver nmea_serial_driver.launch
+
+Note: when running launch file for the first time check that the baud rate param is set to 9600 in the .launch file.
+Note: if the import serial error occurs
+ModuleNotFoundError: No module named 'serial'
+sudo apt install python3-serial
+
+
+

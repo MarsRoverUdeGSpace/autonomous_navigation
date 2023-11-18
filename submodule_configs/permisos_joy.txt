@@ -1,0 +1,2 @@
+ls -l /dev/input/js0
+sudo chmod a+rw /dev/input/js0

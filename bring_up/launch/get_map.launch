@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch> <!-- Map server --> 
+    <arg name="map_file" default="$(find bring_up)/maps/maze.yaml"/> 
+    <arg name="scan_topic" default="/scan" />
+    <arg name="base_frame_id" default="chassis_link" />
+
+
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"></node>
+
+    <node name="amcl" pkg="amcl" type="amcl">
+        <param name ="base_frame_id" value="$(arg base_frame_id)" />
+    </node>
+
+</launch>

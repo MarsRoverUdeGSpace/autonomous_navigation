@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+        <!-- overwriting these args -->
+        <arg name="debug" default="false" />
+        <arg name="gui" default="true" />
+        <arg name="pause" default="false" />
+        <arg name="world" default="$(find bring_up)/world/empty_world.world" /><!-- winding_valley-->
+
+        <!-- include gazebo_ros launcher -->
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+                <arg name="world_name" value="$(arg world)" />
+                <arg name="debug" value="$(arg debug)" />
+                <arg name="gui" value="$(arg gui)" />
+                <arg name="paused" value="$(arg pause)" />
+                <arg name="use_sim_time" value="true" />
+        </include>
+
+        <!-- Teleop with Joy-->
+        <include file="$(find teleop_twist_joy)/launch/teleop.launch"></include>
+
+        <!-- Add Rviz-->
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find bring_up)/rviz/QT1.rviz"/>
+        
+        <!-- Robot description (ilhuacamina)-->
+        <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find bring_up)/URDF/aruco_start.xacro'"/>
+        <node name="robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
+                args="-urdf -param robot_description -model start "/>
+
+
+</launch>
