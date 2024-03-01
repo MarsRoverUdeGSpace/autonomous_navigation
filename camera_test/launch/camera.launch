@@ -1,0 +1,17 @@
+
+<launch>
+    <!-- Nodo de deteccion de codigos aruco -->
+    <node name="aruco_detection" pkg="camera_test" type="aruco_detection.py" output="screen" />
+  
+    <!-- Nodo de ubicación de codigos aruco -->
+    <node name="aruco_position" pkg="camera_test" type="position_aruco.py" output="screen" />
+
+    <!-- Nodo de deteccion de botellas -->
+    <!-- <node name="bottle_detection_node" pkg="camera_test" type="bottle_detection.py" output="screen"> -->
+      <!-- <param name="prototxt" value="$(find camera_test)/src/object_detection/MobileNetSSD_deploy.prototxt.txt"/>
+      <param name="model" value="$(find camera_test)/src/object_detection/MobileNetSSD_deploy.caffemodel"/> -->
+    <!-- </node> -->
+    <!-- Nodo de deteccion de martillos -->
+    <!-- <node name="hammer_detection_node" pkg="camera_test" type="object_detection.py" output="screen" /> -->
+  </launch>
+  
