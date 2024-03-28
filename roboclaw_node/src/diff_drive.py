@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import rospy
 import time
-from roboclaw_3 import Roboclaw
+from roboclaw import Roboclaw
 from geometry_msgs.msg import Twist
 
 def cmd_vel_callback(msg):
@@ -38,7 +38,7 @@ def main():
 
     rc1 = Roboclaw('/dev/ttyACM1', 115200)
     rc2 = Roboclaw('/dev/ttyACM2', 115200)
-    rc3 = Roboclaw('/dev/ttyACM3', 115200)
+    rc3 = Roboclaw('/dev/ttyACM0', 115200)
 
     address = 0x80
 
@@ -68,27 +68,32 @@ def main():
     try:
         while not rospy.is_shutdown():
             if roboclaw_left_speed > 0 and roboclaw_left_speed !=0:
+                if roboclaw_left_speed == 106 and roboclaw_right_speed == 106:
+                    roboclaw_right_speed, roboclaw_left_speed = 126, 126
+                    rc1.ForwardM1(address, int(roboclaw_left_speed))
+                    rc2.ForwardM1(address, int(roboclaw_left_speed))
+                    rc3.ForwardM1(address, int(roboclaw_left_speed))
             #print("Left: ",roboclaw_left_speed)
             #print("Right: ",roboclaw_right_speed)
     #	    print("Adelante")
-                rc1.ForwardM1(address, int(-roboclaw_left_speed))
-                rc2.ForwardM1(address, int(-roboclaw_left_speed))
-                rc3.ForwardM1(address, int(-roboclaw_left_speed))
+                rc1.ForwardM1(address, int(roboclaw_left_speed))
+                rc2.ForwardM1(address, int(roboclaw_left_speed))
+                rc3.ForwardM1(address, int(roboclaw_left_speed))
             else:
-                rc1.BackwardM1(address, int(roboclaw_left_speed))
-                rc2.BackwardM1(address, int(roboclaw_left_speed))
-                rc3.BackwardM1(address, int(roboclaw_left_speed))
+                rc1.BackwardM1(address, int(-roboclaw_left_speed))
+                rc2.BackwardM1(address, int(-roboclaw_left_speed))
+                rc3.BackwardM1(address, int(-roboclaw_left_speed))
 
             if roboclaw_right_speed > 0 and roboclaw_right_speed != 0:
     #	    print("Izquierda")
-                rc1.ForwardM2(address, int(-roboclaw_right_speed))
-                rc2.ForwardM2(address, int(-roboclaw_right_speed))
-                rc3.ForwardM2(address, int(-roboclaw_right_speed))
+                rc1.ForwardM2(address, int(roboclaw_right_speed))
+                rc2.ForwardM2(address, int(roboclaw_right_speed))
+                rc3.ForwardM2(address, int(roboclaw_right_speed))
             else:
     #	    print("Derecha")
-                rc1.BackwardM2(address, int(roboclaw_right_speed))
-                rc2.BackwardM2(address, int(roboclaw_right_speed))
-                rc3.BackwardM2(address, int(roboclaw_right_speed))
+                rc1.BackwardM2(address, int(-roboclaw_right_speed))
+                rc2.BackwardM2(address, int(-roboclaw_right_speed))
+                rc3.BackwardM2(address, int(-roboclaw_right_speed))
 
             loop.sleep()
     except:
