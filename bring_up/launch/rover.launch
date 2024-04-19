@@ -6,7 +6,7 @@
         <arg name="debug" default="false" />
         <arg name="gui" default="true" />
         <arg name="pause" default="false" />
-        <arg name="world" default="$(find bring_up)/maps/mundo4.world" /><!-- winding_valley-->
+        <arg name="world" default="$(find bring_up)/maps/mundo4.world" /><!-- Aqui se cambia el WORLD de GAZEBO-->
         <arg name = "extra_gazebo_args" default="--verbose"/>
 
         <!-- include gazebo_ros launcher -->
@@ -38,12 +38,4 @@
                 <param name ="base_frame" value="chassis_link" />
                 <param name="map_update_interval" value="30.0"/>
         </node>
-
-
-        <!-- Robot description (Qt1)-->
-        <!-- <param name="robot_description" command="cat '$(find bring_up)/URDF/my_robot.urdf'" />
-        <node name="mybot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
-                args="-urdf -param robot_description -model model" />
-        Agregado-->
-
 </launch>
