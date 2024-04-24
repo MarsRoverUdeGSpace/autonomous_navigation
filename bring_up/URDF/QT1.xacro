@@ -2,6 +2,7 @@
 <robot name="rover" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:include filename="$(find bring_up)/URDF/QT1.gazebo"/>
     <xacro:include filename="$(find bring_up)/URDF/macros.xacro"/>
+    <xacro:include filename="lidar.xacro"/>
     
     <xacro:property name="base_width" value="0.7038"/>
     <xacro:property name="base_depth" value="0.3019"/>
