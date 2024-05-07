@@ -912,7 +912,7 @@ class Roboclaw:
 		if data[0]:
 			data[1]/=1024.0
 			data[2]/=1024.0
-			data[3]/=1024.0
+			data[3]/=1024.01425000
 			return data
 		return (0,0,0,0,0,0,0,0)
 

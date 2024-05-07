@@ -47,20 +47,8 @@ address = 0x80
 # rc.ReadCurrents(address) # address
 # rc.ReadM1VelocityPID(address) # address M2 tambien
 # rc.ReadMinMaxMainVoltages(address) # address
-# rc.ReadMinMaxLogicVoltages(address) # address
-# print("Encoder M1:", rc.ReadEncM1(address))
-# print("Encoder M2:", rc.ReadEncM2(address))
-# print("Voltaje de la batería principal:", rc.ReadMainBatteryVoltage(address))
-# print("Voltaje de la batería lógica:", rc.ReadLogicBatteryVoltage(address))
-# print("Velocidad M1:", rc.ReadSpeedM1(address))
-# print("Versión:", rc.ReadVersion(address))
-# print("Corriente del motor M1:", rc.ReadISpeedM1(address))
-# print("Buffers:", rc.ReadBuffers(address))
-# print("PWMs:", rc.ReadPWMs(address))
-# print("Corrientes:", rc.ReadCurrents(address))
-# print("PID de velocidad M1:", rc.ReadM1VelocityPID(address))
-# print("Voltajes mínimo y máximo de la batería principal:", rc.ReadMinMaxMainVoltages(address))
-# print("Voltajes mínimo y máximo de la batería lógica:", rc.ReadMinMaxLogicVoltages(address))
+# rc.ReadMinMaxLogicVoltages(address) # addresss
+# rc.ReadEncoderModes(address)
 
 # rc.ResetEncoders(address)
 
@@ -87,12 +75,38 @@ address = 0x80
 # rc.DutyAccelM1(address, accel=655359, duty=1) # address, accel 0 to 655359, duty -32768 to +32767. M2 tambien
 # rc.DutyAccelM1M2(address, accel1=655359, duty1=1, accel2=655359, duty2=1) # address, accel1 0 to 655359, duty1 -32768 to +32767. accel2 0 to 655359, duty2 -32768 to +32767.
 
+def all_reads(rc, address):
+    print("Encoder M1:", rc.ReadEncM1(address))
+    print("Encoder M2:", rc.ReadEncM2(address))
+    print("Voltaje de la batería principal:", rc.ReadMainBatteryVoltage(address))
+    print("Voltaje de la batería lógica:", rc.ReadLogicBatteryVoltage(address))
+    print("Velocidad M1:", rc.ReadSpeedM1(address))
+    print("Versión:", rc.ReadVersion(address))
+    print("Corriente del motor M1:", rc.ReadISpeedM1(address))
+    print("Buffers:", rc.ReadBuffers(address))
+    print("PWMs:", rc.ReadPWMs(address))
+    print("Corrientes:", rc.ReadCurrents(address))
+    print("PID de velocidad M1:", rc.ReadM1VelocityPID(address))
+    print("Voltajes mínimo y máximo de la batería principal:", rc.ReadMinMaxMainVoltages(address))
+    print("Voltajes mínimo y máximo de la batería lógica:", rc.ReadMinMaxLogicVoltages(address))
+    print("Encoders modo", rc.ReadEncoderModes(address))
+
 # rc.DutyM1M2(address, 32767, 32767)
 # time.sleep(2)
 # rc.DutyM1M2(address, 0, 0)
 rc.DutyAccelM1M2(address, 65535, 32767, 65535, 32767)
-time.sleep(4)
-rc.DutyAccelM1M2(address, 65535, -32767, 65535, -32767)
-time.sleep(4)
-rc.DutyM1M2(address, 0, 0)
+time.sleep(2)
+# rc.DutyAccelM1M2(address, 65535, -32767, 65535, -32767)
+# time.sleep(2)
+rc.DutyAccelM1M2(address,65535, 0, 65535, 0)
+rc.SetM2EncoderMode(address, 128)
+# all_reads(rc, address)
+# rc.ResetEncoders(address)
+# #rc.SpeedAccelDistanceM1
+# rc.SpeedAccelM1M2(address,accel=1425, speed1=1425, speed2=1425)
+# #rc.SpeedAccelDistanceM1M2(address, 1425*1, 1425, 3000, 1425, 3000, 1)
+# all_reads(rc, address)
+# time.sleep(5)
+# rc.SpeedAccelM1M2(address, 1425*5, 0, 0)
+# # 1425 pulses per revolution
 

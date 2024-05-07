@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from os import system
 import rospy
+import sys
 import time
 from roboclaw import Roboclaw
 from geometry_msgs.msg import Twist
@@ -26,33 +27,50 @@ def cmd_vel_callback(msg):
     print("Left: ",roboclaw_left_speed)
     print("Right: ",roboclaw_right_speed)
 
-def main():
-    global left_speed, right_speed
-    global roboclaw_left_speed, roboclaw_right_speed
+def ports():
+    global num_port
+    
+    try:
+        command = "sudo chmod 777 /dev/ttyACM"
+        com = system(command+str(num_port))
+        if com == 256:
+            print(command+str(num_port))
+            if num_port == 500:
+                print("Se ha sobrepasado el numero de intentos")
+                #sys.exit()
+                movement()
+            num_port += 1
+            ports()
+        else:
+            return "/dev/ttyACM" + str(num_port)
+    except:
+        num_port += 1
+        ports()
 
-    rospy.init_node("roboclaw_speed")
-    sub_cmd_vel = rospy.Subscriber("/cmd_vel", Twist, cmd_vel_callback)
+def movement():
+    global num_port
+    num_port = 0
+    baud = 115200
     loop = rospy.Rate(3)
-
-    system("sudo chmod 777 /dev/ttyACM0")
-    system("sudo chmod 777 /dev/ttyACM1")
-    system("sudo chmod 777 /dev/ttyACM2")
-
-
-    rc1 = Roboclaw('/dev/ttyACM1', 115200)
-    rc2 = Roboclaw('/dev/ttyACM2', 115200)
-    rc3 = Roboclaw('/dev/ttyACM0', 115200)
-
+    portrc1 = ports()
+    portrc2 = ports()
+    portrc3 = ports()
+    rc1 = Roboclaw(portrc1,baud)
+    rc2 = Roboclaw(portrc2,baud)
+    rc3 = Roboclaw(portrc3,baud)
+    print(portrc1,portrc2,portrc3)
     address = 0x80
 
     rc1.Open()
     rc2.Open()
     rc3.Open()
+    print("Bateria 2:", rc1.ReadMainBatteryVoltage(address))
+    print("Bateria 1: ", rc2.ReadMainBatteryVoltage(address))
     #address = 0x80
     rcs = [rc1, rc2, rc3]
     version1 = rc1.ReadVersion(address)
     version2 = rc2.ReadVersion(address)
-    version3 = rc3.ReadVersion(address)
+    version3 = rc2.ReadVersion(address)
 
     if version1[0] == False:
         print("GETVERSION1 Failed")
@@ -102,12 +120,9 @@ def main():
 
             loop.sleep()
     except:
-        rc1.ForwardM1(address, 0)
-        rc1.ForwardM2(address, 0)
-        rc2.ForwardM1(address, 0)
-        rc2.ForwardM2(address, 0)
-        rc3.ForwardM1(address, 0)
-        rc3.ForwardM2(address, 0)
+        print("AAAA")
+        time.sleep(5)
+        movement()
 
     rc1.ForwardM1(address, 0)
     rc1.ForwardM2(address, 0)
@@ -115,6 +130,17 @@ def main():
     rc2.ForwardM2(address, 0)
     rc3.ForwardM1(address, 0)
     rc3.ForwardM2(address, 0)
+
+def main():
+    global num_port
+    global roboclaw_left_speed, roboclaw_right_speed
+    command = "sudo chmod 777 /dev/ttyACM"
+
+    rospy.init_node("roboclaw_speed")
+    sub_cmd_vel = rospy.Subscriber("/cmd_vel", Twist, cmd_vel_callback)
+    
+    movement()
+
 
 if __name__ == "__main__":
      main()
