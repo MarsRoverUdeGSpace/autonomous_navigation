@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+    <!-- Add Rviz-->
+    <node name="broadcastMapTf" pkg="bring_up" type="broadcastStaticTf.py" output="screen"> 
+        <param name="headerId" type="String" value="map"/>
+        <param name="childID" type="String" value="odom"/>
+        <param name="translationX" type="double" value="0.0"/>
+        <param name="translationY" type="double" value="0.0"/>
+        <param name="translationZ" type="double" value="0.27"/>
+        <param name="eulerR" type="double" value="0.0"/>
+        <param name="eulerP" type="double" value="0.0"/>
+        <param name="eulerY" type="double" value="0.0"/>
+    </node>
+    <node name="broadcastBaseLinkTf" pkg="bring_up" type="broadcastDynamicTf.py" output="screen"> 
+        <param name="headerId" type="String" value="odom"/>
+        <param name="childID" type="String" value="base_link"/>
+        <param name="translationX" type="double" value="0.0"/>
+        <param name="translationY" type="double" value="0.0"/>
+        <param name="translationZ" type="double" value="0.0"/>
+        <param name="eulerR" type="double" value="0.0"/>
+        <param name="eulerP" type="double" value="0.0"/>
+        <param name="eulerY" type="double" value="0.0"/>
+    </node>
+    <node name="broadcastZedTf" pkg="bring_up" type="broadcastStaticTf.py" output="screen"> 
+        <param name="headerId" type="String" value="base_link"/>
+        <param name="childID" type="String" value="zed"/>
+        <param name="translationX" type="double" value="0.09"/>
+        <param name="translationY" type="double" value="0.0"/>
+        <param name="translationZ" type="double" value="0.0"/>
+        <param name="eulerR" type="double" value="0.0"/>
+        <param name="eulerP" type="double" value="0.0"/>
+        <param name="eulerY" type="double" value="0.0"/>
+    </node>
+
+</launch>
