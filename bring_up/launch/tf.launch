@@ -23,7 +23,7 @@
     </node>
     <node name="broadcastZedTf" pkg="bring_up" type="broadcastStaticTf.py" output="screen"> 
         <param name="headerId" type="String" value="base_link"/>
-        <param name="childID" type="String" value="zed"/>
+        <param name="childID" type="String" value="zed2i_base_link"/>
         <param name="translationX" type="double" value="0.09"/>
         <param name="translationY" type="double" value="0.0"/>
         <param name="translationZ" type="double" value="0.0"/>
@@ -31,5 +31,6 @@
         <param name="eulerP" type="double" value="0.0"/>
         <param name="eulerY" type="double" value="0.0"/>
     </node>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find bring_up)/rviz/broadcastTf.rviz"/>
 
 </launch>

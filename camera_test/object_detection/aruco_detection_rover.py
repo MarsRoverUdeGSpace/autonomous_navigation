@@ -63,6 +63,7 @@ def callback_imagen(msg):
             aruco = Float32MultiArray()
             # Asinar valores i = id, avg_x = x, avg_y = y al mensaje a publicar
             aruco.data = [ids[i], avg_x, avg_y]
+            #todo Verificar 3 veces la deteccion del codigo para que no publique cosas random
             pub.publish(aruco)
             #print("Se detecto ARUCO con ID: ",i)
         

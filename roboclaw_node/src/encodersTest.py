@@ -1,58 +1,70 @@
-import time
-from roboclaw import Roboclaw
+#!/usr/bin/env python3
 from os import system
-#Windows comport name
-#rc = Roboclaw("COM9",115200)
-#Linux comport name
-rc1 = Roboclaw("/dev/ttyACM0",115200)
-rc2 = Roboclaw("/dev/ttyACM0",115200)
-rc3 = Roboclaw("/dev/ttyACM0",115200)
-rcs = [rc1, rc2,rc3]
-for rc in rcs:
-    rc.open()
+import rospy
+#import time
+from roboclaw_3 import Roboclaw
+from geometry_msgs.msg import Twist
+from sensor_msgs.msg import Joy
 
-address = 0x80
+global max_voltage, voltage_battery
+voltage_battery = 21
+max_voltage = 14
+def limit_speed(max, left, right):
+    if left > max:
+        left = max
+    if right > max:
+        right
+    return left, right
 
-def reads(rc, address):
-    print("Encoder M1:", rc.ReadEncM1(address))
-    print("Encoder M2:", rc.ReadEncM2(address))
-    # print("Voltaje de la batería principal:", rc.ReadMainBatteryVoltage(address))
-    # print("Corrientes:", rc.ReadCurrents(address))
-    # print("PWMs:", rc.ReadPWMs(address))
-system("sudo chmod 777 /dev/ttyACM0")
-system("sudo chmod 777 /dev/ttyACM1")
-system("sudo chmod 777 /dev/ttyACM2")
-
-rc1 = Roboclaw("/dev/ttyACM0",115200)
-rc2 = Roboclaw("/dev/ttyACM1",115200)
-rc3 = Roboclaw("/dev/ttyACM2",115200)
-
-address = 0x80
-bat1 = rc1.ReadMainBatteryVoltage(address)
-bat2 = rc2.ReadMainBatteryVoltage(address)
-bat3 = rc3.ReadMainBatteryVoltage(address)
-
-voltajeDeseado = 6
-vel1 = int(32767/bat1) * voltajeDeseado
-vel2 = int(32767/bat2) * voltajeDeseado
-vel3 = int(32767/bat3) * voltajeDeseado
-vel = [vel1, vel2, vel3]
-for i in range(3):
-    print("Vel: ",vel[i])
-    rcs[i].DutyAccelM1M2(address, 12000, vel[i], 12000, vel[i]) # address, accel1 0 to 655359, duty1 -32768 to +32767. accel2 0 to 655359, duty2 -32768 to +32767.
-
-for i in range(20):
-    reads(rc, address)
-    time.sleep(0.1)
+def cmd_vel_callback(msg):
+    global roboclaw_left_speed, roboclaw_right_speed, mode
+    distancia_llantas = 0.8
     
-for rc in rcs:
-    rc.DutyAccelM1M2(address,12000, 0, 12000, 0)
+    #scale_linear_turbo: 0.7
+	#scale_angular_turbo: 0.6
+    
+    roboclaw_right_speed = msg.linear.x + (distancia_llantas/2)*msg.angular.z
+    roboclaw_left_speed = msg.linear.x - (distancia_llantas/2)*msg.angular.z
+    if mode == 5:
+        max_speed = 2
+    elif mode == 0:
+        max_speed = 1
+    else:
+        max_speed = 1
+    roboclaw_left_speed, roboclaw_right_speed, = limit_speed(max_speed, roboclaw_left_speed, roboclaw_right_speed)
+    if (msg.angular.z == 2.5 or msg.angular.z == -2.5 or msg.angular.z == 1.5 or msg.angular.z == -1.5) and msg.linear.x == 0:
+        roboclaw_right_speed *=2
+        roboclaw_left_speed *=2
+    # test.right = roboclaw_left_speed
+    print("Left: ",roboclaw_left_speed)
+    print("Right: ",roboclaw_right_speed)
+    # rc.DutyAccelM1M2(address, accel1=655359, duty1=1, accel2=655359, duty2=1) # address, accel1 0 to 655359, duty1 -32768 to +32767. accel2 0 to 655359, duty2 -32768 to +32767.
 
-for i in range(3):
-    print("Vel: ",vel[i])
-    rcs[i].DutyAccelM1M2(address, 12000, vel[i], 12000, vel[i]) # address, accel1 0 to 655359, duty1 -32768 to +32767. accel2 0 to 655359, duty2 -32768 to +32767.
 
+def joy_callback(msg):
+    global mode
+    for i in range(len(msg.buttons)):
+        if msg.buttons[i] == 1:
+            mode = i
+            break
+    # else:
+    #     mode = "No hay ningun boton presionado"
+    # print(mode)
 
-for i in range(15):
-    reads(rc, address)
-    time.sleep(0.1)
+def main():
+    global roboclaw_left_speed, roboclaw_right_speed, mode
+    mode = 1
+    rospy.init_node("roboclaw_speed")
+    print("Waiting for topic /joy_roboclaw")
+    print("Waiting for topic /cmd_vel")
+    rospy.wait_for_message("/joy_roboclaw",Joy, timeout=50)
+    rospy.wait_for_message("/cmd_vel",Twist, timeout=50)
+    rospy.Subscriber("/joy_roboclaw",Joy, joy_callback)
+    rospy.Subscriber("/cmd_vel", Twist, cmd_vel_callback)
+    loop = rospy.Rate(3)
+    while not rospy.is_shutdown():
+        pass
+    rospy.spin()
+
+if __name__ == "__main__":
+     main()

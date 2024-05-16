@@ -25,8 +25,8 @@ from tf2_msgs.msg import TFMessage
 def aruco_tf(position):
     global id, t
 
-    t =TransformStamped()
-    t.header.frame_id = "ZED_link"
+    t = TransformStamped()
+    t.header.frame_id = "zed2i_base_link"
     t.child_frame_id = "AR_" + str(id)
     t.transform.translation.x = position[0]
     t.transform.translation.y = position[1]
@@ -51,25 +51,56 @@ def callback_aruco(msg):
     global avg_x
     global avg_y
     global id
+    global tf_broadcaster
+    global point_cloud_data
+    punto_aux = 0
+    avg_y, avg_x = 0, 0
+    point_cloud_width = 427
+    point_cloud_height = 240
     id = int(msg.data[0])
     avg_x = int(msg.data[1])
     avg_y = int(msg.data[2])
-    # print("ID: ",id)
-    # print("avg_x: ",avg_x)
-    # print("avg_y: ",avg_y)
+    if avg_y != 0 and avg_x != 0 and point_cloud_data != 0:
+                
+        # Verifica que las coordenadas estén dentro del rango de la nube de puntos
+        if 0 <= avg_x < point_cloud_width and 0 <= avg_y < point_cloud_height:
+            # Obtén las coordenadas (x, y, z) del punto en la nube de puntos
+            index = avg_y * point_cloud_width + avg_x
+            # print("INDEX: ",index)
+            if not np.isnan(point_cloud_data[index][0]):  # Verificar si la coordenada x no es un número
+                punto = point_cloud_data[index]
+                punto_aux = punto
+                print("Aruco in (x, y, z):", punto, "Aruco_ID: ",id)
+                aruco_tf(punto)
+                t.header.stamp = rospy.Time.now()
+                tf_broadcaster.sendTransform(t)
+                #print(index)
+                #print(point_cloud_data[index])
+            
+                # print("ID: ",id)
+                # print("avg_x: ",avg_x)
+                # print("avg_y: ",avg_y)
+            else:
+                if punto_aux != 0:
+                    print("Aruco in (x, y, z):", punto, "Aruco_ID: ",id)
+                    aruco_tf(punto_aux)
+                    t.header.stamp = rospy.Time.now()
+                    tf_broadcaster.sendTransform(t)
+                else:
+                    print("The point has not been detected correctly in the point cloud.")
+        else:
+            print("Coordinates are outside the range of the point cloud.")
 
 
 
 def main():
     global avg_x
     global avg_y
-    global point_cloud_data
     global t
     global id
-    punto_aux = 0
-    avg_y, avg_x = 0, 0
-    point_cloud_width = 960
-    point_cloud_height = 540
+    global tf_broadcaster
+    global point_cloud_data
+    point_cloud_data = 0
     # Inicializa el nodo suscriptor
     rospy.init_node("aruco_position_node")
     print("El nodo aruco_position ha sido iniciado")
@@ -95,45 +126,16 @@ def main():
     
     #rospy.Timer(rospy.Duration(1), callback_point_cloud)
     #Mientras que no se detenga el nodo
-    while not rospy.is_shutdown() and point_cloud_data is not None:
-        last_time = rospy.Time.now().to_sec()
-        try:
-            rospy.wait_for_message("/Aruco", Float32MultiArray,timeout=5)  # Espera a que llegue el primer mensaje
-            if avg_y != 0 and avg_x != 0:
-                
-                # Verifica que las coordenadas estén dentro del rango de la nube de puntos
-                if 0 <= avg_x < point_cloud_width and 0 <= avg_y < point_cloud_height:
-                    # Obtén las coordenadas (x, y, z) del punto en la nube de puntos
-                    index = avg_y * point_cloud_width + avg_x
-                    # print("INDEX: ",index)
-                    if not np.isnan(point_cloud_data[index][0]):  # Verificar si la coordenada x no es un número
-                        punto = point_cloud_data[index]
-                        punto_aux = punto
-                        print("Aruco in (x, y, z):", punto, "Aruco_ID: ",id)
-                        aruco_tf(punto)
-                        t.header.stamp = rospy.Time.now()
-                        tf_broadcaster.sendTransform(t)
-                        #print(index)
-                        #print(point_cloud_data[index])
-                    
-                        # print("ID: ",id)
-                        # print("avg_x: ",avg_x)
-                        # print("avg_y: ",avg_y)
-                    else:
-                        if punto_aux != 0:
-                            print("Aruco in (x, y, z):", punto, "Aruco_ID: ",id)
-                            aruco_tf(punto_aux)
-                            t.header.stamp = rospy.Time.now()
-                            tf_broadcaster.sendTransform(t)
-                        else:
-                            print("The point has not been detected correctly in the point cloud.")
-                else:
-                    print("Coordinates are outside the range of the point cloud.")
-        except rospy.exceptions.ROSException as e:
-            print("An ARUCO tag has not been detected")
-            #tf_broadcaster.unregister()
-        rate.sleep()  # Espera para cumplir la frecuencia deseada
+    while not rospy.is_shutdown():
+        # last_time = rospy.Time.now().to_sec()
+        # try:
+        #     rospy.wait_for_message("/Aruco", Float32MultiArray,timeout=5)  # Espera a que llegue el primer mensaje
+        # except rospy.exceptions.ROSException as e:
+        #     print("An ARUCO tag has not been detected")
 
+        #     #tf_broadcaster.unregister()
+        # rate.sleep()  # Espera para cumplir la frecuencia deseada
+        pass
     else:
         print("La nube de puntos no se ha recibido correctamente.")
 
