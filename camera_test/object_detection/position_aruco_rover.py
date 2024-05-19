@@ -86,8 +86,7 @@ def main():
     rospy.wait_for_message("/Aruco", Float32MultiArray)  # Espera a que llegue el primer mensaje
 
     # Subscriptor al tópico /zed2i/zed_node/point_cloud/cloud_registered con el tipo de mensaje Point_cloud2
-    aruco_sub = rospy.Subscriber("/Aruco", Float32MultiArray, callback_aruco)
-    
+    rospy.Subscriber("/Aruco", Float32MultiArray, callback_aruco)
 
     # Subscriptor al tópico /zed2i/zed_node/point_cloud/cloud_registered con el tipo de mensaje Point_cloud2
     rospy.Subscriber("/zed2i/zed_node/point_cloud/cloud_registered", PointCloud2, callback_point_cloud)

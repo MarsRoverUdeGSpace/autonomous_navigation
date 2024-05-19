@@ -46,14 +46,15 @@ def main():
     # Initialize node
     rospy.init_node('baseLinkTfBroadcaster')
     # Define rate
-    rate = rospy.Rate(5)
+    rate = rospy.Rate(3)
 
     # Get params from the launch file
-    header = rospy.get_param('~headerId', "odom")
-    child = rospy.get_param('~childID', "base_link")
+    topic = rospy.get_param('~topic', "/odom")
+    header = rospy.get_param('~headerId', "zed2i_base_link")
+    child = rospy.get_param('~childID', "arsi")
     translationX = rospy.get_param('~translationX',0.0)
     translationY = rospy.get_param('~translationY',0.0)
-    translationZ = rospy.get_param('~translationZ',0.0)
+    translationZ = rospy.get_param('~translationZ',0.)
     eulerR = rospy.get_param('~eulerR',0.0)
     eulerP = rospy.get_param('~eulerP',0.0)
     eulerY = rospy.get_param('~eulerY',0.0)
@@ -63,7 +64,7 @@ def main():
     # Create a callback_partial to use parameters in callback function
     callback_partial = functools.partial(callbackOdometry, headerFrame=header, childFrame=child)
     #Subscribe to odometry data
-    rospy.Subscriber("/ekf/Odometry", Odometry, callback_partial)
+    rospy.Subscriber(topic, Odometry, callback_partial)
 
     # Create an object type TransformBroadcaster to public dynamic tf
     dynamicBroadcaster = tf.TransformBroadcaster()
