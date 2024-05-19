@@ -14,6 +14,13 @@
                 <param name="use_tf_static" value="false"/>
   </node>
 
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+
+
+  <!-- Adding wheel tf broadcaster -->
+  <node name="wheel_tf_broadcaster" pkg="bring_up" type="wheel_tf_broadcaster.py" output="screen"/>
+
+
   <!-- Add gmapping for SLAM mapping-->
   <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" clear_params="true">
         <param name ="base_frame" value="base_link" />
