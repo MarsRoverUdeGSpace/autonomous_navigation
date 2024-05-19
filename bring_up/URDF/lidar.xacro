@@ -1,12 +1,32 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
-    <xacro:arg name="gpu" default="false"/>
-    <xacro:property name="gpu" value="false" />
+    <!-- Definimos las dimensiones del lidar-->
+    <link name="lidar_link">
+        <inertial>
+            <mass value="0.0"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+        </inertial>
+        <collision>
+            <geometry>
+                <cylinder radius="0.025" length="0.04"></cylinder>
+            </geometry>
+            <origin xyz="0 0 -0.02" rpy="0 0 0"/>
+        </collision>
+        <visual>
+            <geometry>
+                <cylinder radius="0.025" length="0.04"></cylinder>
+            </geometry>
+            <origin xyz="0 0 -0.02" rpy="0 0 0"/>
+        </visual>
+    </link>
 
-    <xacro:include filename="$(find velodyne_description)/urdf/HDL-32E.urdf.xacro"/>
-    <xacro:HDL-32E parent="chassis_link" name="velodyne2" topic="/velodyne_points2" hz="10" samples="220" gpu="${gpu}">
-        <origin xyz="0.3 0 0.45" rpy="0 0 0" />
-    </xacro:HDL-32E>
+    <!-- Definimos el joint entre el lidar y la base -->
+    <joint name="base_to_lidar" type="fixed">
+        <parent link="base_link"/>
+        <child link="lidar_link"/>
+        <origin xyz="0.3 0 0.47" rpy="0 0 0"/>
+    </joint>
     
 </robot>

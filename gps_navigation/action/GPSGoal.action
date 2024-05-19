@@ -1,0 +1,8 @@
+# Define the GPS navigation action
+float64 latitud
+float64 longitud
+float64 altitud
+---
+bool success
+---
+bool feedback

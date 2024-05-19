@@ -21,7 +21,7 @@
       <pose_covariance_diagonal>[1.0, 1.0, 0.0, 0.0, 0.0, 1.0]</pose_covariance_diagonal>
       <twist_covariance_diagonal>[0.01, 0.0, 0.0, 0.0, 0.0, 0.1]</twist_covariance_diagonal>
       <gaussianNoise>0.05</gaussianNoise>
-      <robotBaseFrame>chassis_link</robotBaseFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
       <legacyMode>false</legacyMode>
       <publishOdomTF>true</publishOdomTF>
       <odometrySource>world</odometrySource>
@@ -40,8 +40,8 @@
   
   <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-      <leftJoint>chassis_to_middle_wheel</leftJoint>
-      <rightJoint>chassis_to_middle_wheel_2</rightJoint>
+      <leftJoint>base_to_middle_wheel</leftJoint>
+      <rightJoint>base_to_middle_wheel_2</rightJoint>
       <wheelSeparation>0.7</wheelSeparation>
       <wheelDiameter>0.33</wheelDiameter>
       <torque>5000</torque>  
@@ -59,7 +59,7 @@
       <pose_covariance_diagonal>[1.0, 1.0, 0.0, 0.0, 0.0, 1.0]</pose_covariance_diagonal>
       <twist_covariance_diagonal>[0.01, 0.0, 0.0, 0.0, 0.0, 0.1]</twist_covariance_diagonal>
       <gaussianNoise>0.05</gaussianNoise>
-      <robotBaseFrame>chassis_link</robotBaseFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
       <legacyMode>false</legacyMode>
       <publishOdomTF>true</publishOdomTF>
       <odometrySource>world</odometrySource>
@@ -68,7 +68,7 @@
 
   <transmission name="tran5">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="chassis_to_middle_wheel">
+    <joint name="base_to_middle_wheel">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor5">
@@ -78,7 +78,7 @@
   
   <transmission name="tran6">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="chassis_to_middle_wheel_2">
+    <joint name="base_to_middle_wheel_2">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor6">
@@ -98,8 +98,8 @@
 
   <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-      <leftJoint>chassis_to_flwheel</leftJoint>
-      <rightJoint>chassis_to_frwheel</rightJoint>
+      <leftJoint>base_to_flwheel</leftJoint>
+      <rightJoint>base_to_frwheel</rightJoint>
       <wheelSeparation>0.7</wheelSeparation>
       <wheelDiameter>0.33</wheelDiameter>
       <torque>5000</torque>  
@@ -117,7 +117,7 @@
       <pose_covariance_diagonal>[1.0, 1.0, 0.0, 0.0, 0.0, 1.0]</pose_covariance_diagonal>
       <twist_covariance_diagonal>[0.01, 0.0, 0.0, 0.0, 0.0, 0.1]</twist_covariance_diagonal>
       <gaussianNoise>0.05</gaussianNoise>
-      <robotBaseFrame>chassis_link</robotBaseFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
       <legacyMode>false</legacyMode>
       <publishOdomTF>true</publishOdomTF>
       <odometrySource>world</odometrySource>
@@ -127,7 +127,7 @@
   <!-- Transmission left wheel-->
   <transmission name="tran1">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="chassis_to_flwheel">
+    <joint name="base_to_flwheel">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor1">
@@ -138,7 +138,7 @@
   <!-- transmission right wheel-->
   <transmission name="tran2">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="chassis_to_frwheel">
+    <joint name="base_to_frwheel">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor2">
@@ -148,8 +148,8 @@
 
   <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-      <leftJoint>chassis_to_middle_wheel</leftJoint>
-      <rightJoint>chassis_to_middle_wheel_2</rightJoint>
+      <leftJoint>base_to_middle_wheel</leftJoint>
+      <rightJoint>base_to_middle_wheel_2</rightJoint>
       <wheelSeparation>0.7</wheelSeparation>
       <wheelDiameter>0.33</wheelDiameter>
       <torque>5000</torque>  
@@ -167,7 +167,7 @@
       <pose_covariance_diagonal>[1.0, 1.0, 0.0, 0.0, 0.0, 1.0]</pose_covariance_diagonal>
       <twist_covariance_diagonal>[0.01, 0.0, 0.0, 0.0, 0.0, 0.1]</twist_covariance_diagonal>
       <gaussianNoise>0.05</gaussianNoise>
-      <robotBaseFrame>chassis_link</robotBaseFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
       <legacyMode>false</legacyMode>
       <publishOdomTF>true</publishOdomTF>
       <odometrySource>world</odometrySource>
@@ -177,7 +177,7 @@
   <!-- Transmission left wheel-->
   <transmission name="tran1">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="chassis_to_middle_wheel">
+    <joint name="base_to_middle_wheel">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor5">
@@ -188,7 +188,7 @@
   <!-- transmission right wheel-->
   <transmission name="tran2">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="chassis_to_middle_wheel_2">
+    <joint name="base_to_middle_wheel_2">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor6">
