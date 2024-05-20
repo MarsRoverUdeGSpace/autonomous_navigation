@@ -27,6 +27,7 @@ def odom_publisher():
 
         # Broadcast TF transform
         odom_broadcaster = tf.TransformBroadcaster()
+        # pose.position.x = pose.position.x+0.01
         odom_broadcaster.sendTransform(
             (pose.position.x, pose.position.y, pose.position.z),
             (pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w),
