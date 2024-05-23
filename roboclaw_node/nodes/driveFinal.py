@@ -8,7 +8,7 @@ from sensor_msgs.msg import Joy
 
 global maxVoltage, voltageBattery
 voltageBattery = 21
-maxVoltage = 14
+maxVoltage = 10
 def limit_speed(max, left, right):
     if left > max:
         left = max
@@ -63,26 +63,28 @@ def permisos():
     system("sudo chmod 777 /dev/ttyACM2")
 
 def versions(rcs, address):
-    version1 = rcs[0].ReadVersion(address)
-    version2 = rcs[1].ReadVersion(address)
-    version3 = rcs[2].ReadVersion(address)
+    version = []
+    for i in range(len(rcs)):
+        print("A")
+        version.append(rcs[i].ReadVersion(address))
 
-    if version1[0] == False:
+    if version[0][0] == False:
         print("GETVERSION1 Failed")
-    elif version2[0] == False:
+    elif version[1][0] == False:
         print("GETVERSION2 Failed")
-    elif version3[0] == False:
+    elif version[2][0] == False:
         print("GETVERSION3 Failed")
     else:
-        print(repr(version1[1]))
-        print(repr(version2[1]))
-        print(repr(version3[1]))
+        print(repr(version[0][1]))
+        print(repr(version[1][1]))
+        print(repr(version[2][1]))
 
 def meanVoltage(rcs, address):
     prom_voltage = 0
     for i in range(len(rcs)):
         prom_voltage += rcs[i].ReadMainBatteryVoltage(address)[1]
-        return int(prom_voltage/len(rcs))
+    return int(prom_voltage/len(rcs))
+
 def main():
     global roboclaw_left_speed, roboclaw_right_speed, mode
     permisos()
@@ -116,7 +118,7 @@ def main():
             # print("Right: ",dutyRight)
             
             for rc in rcs:
-                rc.DutyAccelM1M2(address, 200000, dutyRight, 200000, dutyLeft)
+                rc.DutyAccelM1M2(address, 20000, dutyRight, 20000, dutyLeft)
             loop.sleep()
     except Exception:
         print("Detener", 0)
