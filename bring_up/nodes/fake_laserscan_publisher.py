@@ -48,7 +48,7 @@ def generate_fake_scan():
 def scan_publisher():
     rospy.init_node('scan_publisher_node', anonymous=True)
     pub = rospy.Publisher('/scan', LaserScan, queue_size=10)
-    rate = rospy.Rate(10)  # 10 Hz
+    rate = rospy.Rate(5)  # 10 Hz
 
     while not rospy.is_shutdown():
         fake_scan = generate_fake_scan()
