@@ -1,15 +1,15 @@
 <launch>
 
   <!-- Publicar odometria y tf -->
-  <node name="odom_publisher" pkg="bring_up" type="fake_odom_publisher.py" output="screen">
-      <!-- <param name="headerId" type="String" value="odom"/>
+  <node name="odom_publisher" pkg="bring_up" type="fake_odom_publisher2.py" output="screen">
+      <param name="headerId" type="String" value="odom"/>
       <param name="childID" type="String" value="base_link"/>
       <param name="translationX" type="double" value="0.0"/>
       <param name="translationY" type="double" value="0.0"/>
       <param name="translationZ" type="double" value="0.0"/>
       <param name="eulerR" type="double" value="0.0"/>
       <param name="eulerP" type="double" value="0.0"/>
-      <param name="eulerY" type="double" value="0.0"/> -->
+      <param name="eulerY" type="double" value="0.0"/>
   </node>
 
   <!-- Publicar datos de prueba para el laser -->

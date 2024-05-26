@@ -5,7 +5,8 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /TF1/Tree1
-        - /Pose1
+        - /Pose2
+        - /Pose3
       Splitter Ratio: 0.3969956934452057
     Tree Height: 719
   - Class: rviz/Selection
@@ -242,7 +243,7 @@ Visualization Manager:
       Axes Length: 1
       Axes Radius: 0.10000000149011612
       Class: rviz/Pose
-      Color: 255; 25; 0
+      Color: 0; 255; 0
       Enabled: true
       Head Length: 0.30000001192092896
       Head Radius: 0.10000000149011612
@@ -251,7 +252,23 @@ Visualization Manager:
       Shaft Length: 1
       Shaft Radius: 0.05000000074505806
       Shape: Arrow
-      Topic: /goal_marker_gps
+      Topic: /goal_pose_marker
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/Pose
+      Color: 173; 127; 168
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: Pose
+      Queue Size: 10
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic: /initial_pose_marker
       Unreliable: false
       Value: true
   Enabled: true
@@ -298,9 +315,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6597968935966492
+      Pitch: 0.339796245098114
       Target Frame: <Fixed Frame>
-      Yaw: 3.320777654647827
+      Yaw: 4.672158241271973
     Saved: ~
 Window Geometry:
   Displays:
