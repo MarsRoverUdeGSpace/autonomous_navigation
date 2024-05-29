@@ -33,7 +33,6 @@ def limit_speed(max, left, right):
 def cmd_vel_callback(msg):
     global roboclaw_left_speed, roboclaw_right_speed, mode
     distancia_llantas = 0.8
-    print("JASJDJASJFJWS")
     roboclaw_right_speed = msg.linear.x + (distancia_llantas/2)*msg.angular.z
     roboclaw_left_speed = msg.linear.x - (distancia_llantas/2)*msg.angular.z
     if mode == 5:
