@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+    <!-- Start the initial pose setter node -->
+    <node pkg="bring_up" type="localizeRover.py" name="initial_pose_setter" output="screen"></node>
+</launch>

@@ -1,0 +1,36 @@
+<launch>
+
+  <!-- Publicar odometria y tf -->
+  <node name="odom_publisher" pkg="bring_up" type="fake_odom_publisher2.py" output="screen">
+      <param name="headerId" type="String" value="odom"/>
+      <param name="childID" type="String" value="base_link"/>
+      <param name="translationX" type="double" value="0.0"/>
+      <param name="translationY" type="double" value="0.0"/>
+      <param name="translationZ" type="double" value="0.0"/>
+      <param name="eulerR" type="double" value="0.0"/>
+      <param name="eulerP" type="double" value="0.0"/>
+      <param name="eulerY" type="double" value="0.0"/>
+  </node>
+
+  <!-- Publicar datos de prueba para el laser -->
+  <node name="scan_publisher_node" pkg="bring_up" type="fake_laserscan_publisher.py" output="screen"/>
+
+  <!-- Add Rviz-->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find bring_up)/rviz/robot_model.rviz"/>
+
+  <!-- Robot description (ilhuacamina)-->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find bring_up)/URDF/ilhuicamina_simplified.xacro'"/>
+  <node name="robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
+    args="-urdf -param robot_description -model QT1 "/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+      <param name="use_tf_static" value="false"/>
+  </node>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+
+  <!-- Add gmapping for SLAM mapping-->
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" clear_params="true">
+    <param name ="base_frame" value="base_link" />
+    <param name="map_update_interval" value="5.0"/>
+  </node>
+
+</launch>

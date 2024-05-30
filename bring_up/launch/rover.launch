@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 <launch>
         <env name="GAZEBO_MODEL_PATH" value="$(find bring_up)/models"/>
 
@@ -6,10 +6,12 @@
         <arg name="debug" default="false" />
         <arg name="gui" default="true" />
         <arg name="pause" default="false" />
-        <arg name="world" default="$(find bring_up)/maps/mundo4.world" /><!-- winding_valley-->
-        <arg name = "extra_gazebo_args" default="--verbose"/>
+
+        <!-- Aqui se cambia el WORLD de GAZEBO -->
+        <arg name="world" default="$(find bring_up)/maps/empty.world" />
 
         <!-- include gazebo_ros launcher -->
+        <arg name = "extra_gazebo_args" default="--verbose"/>
         <include file="$(find gazebo_ros)/launch/empty_world.launch">
                 <arg name="world_name" value="$(arg world)" />
                 <arg name="debug" value="$(arg debug)" />
@@ -23,7 +25,7 @@
         <include file="$(find teleop_twist_joy)/launch/teleop.launch"></include>
 
         <!-- Add Rviz-->
-        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find bring_up)/rviz/QT1.rviz"/>
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find bring_up)/rviz/robot_model.rviz"/>
         
         <!-- Robot description (ilhuacamina)-->
         <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find bring_up)/URDF/QT1.xacro'"/>
@@ -35,15 +37,7 @@
 
         <!-- Add gmapping for SLAM mapping-->
         <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" clear_params="true">
-                <param name ="base_frame" value="chassis_link" />
+                <param name ="base_frame" value="base_link" />
                 <param name="map_update_interval" value="30.0"/>
         </node>
-
-
-        <!-- Robot description (Qt1)-->
-        <!-- <param name="robot_description" command="cat '$(find bring_up)/URDF/my_robot.urdf'" />
-        <node name="mybot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
-                args="-urdf -param robot_description -model model" />
-        Agregado-->
-
 </launch>

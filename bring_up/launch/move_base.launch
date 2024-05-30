@@ -1,20 +1,21 @@
 <launch>
    <master auto="start"/>
-   <arg name="base_frame_id" default="chassis_link" />
-   
 
-   <!--- Run AMCL --> 
-   <include file="$(find amcl)/examples/amcl_diff.launch"/>
+   <!-- Launch the nmea_serial_driver node with specified parameters -->
+    <node name="nmea_serial_driver" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
+        <param name="port" value="/dev/ttyUSB0" />
+        <param name="baud" value="9600" />
+    </node>
 
+   <!-- Start move base -->
    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
       <rosparam file="$(find bring_up)/params/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
       <rosparam file="$(find bring_up)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
       <rosparam file="$(find bring_up)/params/local_costmap_params.yaml" command="load" />
       <rosparam file="$(find bring_up)/params/global_costmap_params.yaml" command="load" /> 
       <rosparam file="$(find bring_up)/params/base_local_planner_params.yaml" command="load" />
-
       <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
-      <param name="controller_frequency" value="10.0" />
- </node>
+      <param name="controller_frequency" value="5.0" />
+   </node>
 
 </launch> 
