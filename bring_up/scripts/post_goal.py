@@ -2,14 +2,27 @@
 
 import rospy
 import actionlib
+import sys
+import io
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from geometry_msgs.msg import Pose, Point, Quaternion, PoseStamped
 from sensor_msgs.msg import NavSatFix
 import utm
 
-class MoveBaseGoalSender:
-    def __init__(self):
+infoApi = {
+    "goal_node" : "send_goal_node is shutdown",
+    "status_GPS" : "Stopped",
+    "goal_GPS" : None,
+    "initial_utm" : None,
+    "goal_utm" : None,
+    "error_utm" : None,
+    "initial_gps_coordinates" : None,
+    "initial_marker" : None,
+    "goal_marker" : None
+}
 
+class MoveBaseGoalSender:
+    def __init__(self, goal_lat, goal_lon):
         rospy.init_node('send_goal_node')
         rospy.loginfo("send_goal_node started.")
 
@@ -28,35 +41,35 @@ class MoveBaseGoalSender:
         self.client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         self.client.wait_for_server()
 
+        # Set goal coordinates from arguments
+        self.goal_lat = goal_lat
+        self.goal_lon = goal_lon
+
         # Wait until we get the initial GPS coordinates
         rospy.loginfo("Waiting for initial GPS coordinates...")
+
         while self.initial_lat is None or self.initial_lon is None:
             rospy.sleep(0.1)
 
-        # Example GPS coordinates (use at least 5 floating points)
-        lat1, lon1 = 20.657628333333335, -103.32630833333333
-        lat2, lon2 = self.initial_lat, self.initial_lon
-
-        rospy.loginfo("Received goal GPS coordinates: lat={}, lon={}".format(lat2, lon2))
+        rospy.loginfo("Received goal GPS coordinates: lat={}, lon={}".format(self.goal_lat, self.goal_lon))
 
         # Convert initial and goal GPS coordinates to UTM coordinates
-        utm_x1, utm_y1, zone_number1, zone_letter1 = self.gps_to_utm(lat1, lon1)
-        utm_x2, utm_y2, zone_number2, zone_letter2 = self.gps_to_utm(lat2, lon2)
+        initial_utm = self.gps_to_utm(self.initial_lat, self.initial_lon)
+        goal_utm = self.gps_to_utm(self.goal_lat, self.goal_lon)
 
-        rospy.loginfo("Initial UTM: x={}, y={}, zone={}{}".format(utm_x1, utm_y1, zone_number1, zone_letter1))
-        rospy.loginfo("Goal UTM: x={}, y={}, zone={}{}".format(utm_x2, utm_y2, zone_number2, zone_letter2))
+        rospy.loginfo("Initial UTM: x={}, y={}, zone={}{}".format(initial_utm[0], initial_utm[1], initial_utm[2], initial_utm[3]))
+        rospy.loginfo("Goal UTM: x={}, y={}, zone={}{}".format(goal_utm[0], goal_utm[1], goal_utm[2], goal_utm[3]))
 
         # Ensure the UTM coordinates are in the same zone
-        if zone_number1 != zone_number2 or zone_letter1 != zone_letter2:
+        if initial_utm[2] != goal_utm[2] or initial_utm[3] != goal_utm[3]:
             rospy.logerr("Initial and goal coordinates are in different UTM zones")
         else:
-            # Calculate the relative position
-            #! Esto no va
-            # rel_x = utm_x2 - utm_x1
-            # rel_y = utm_y2 - utm_y1
+            # Calculate relative coordinates
+            rel_x = goal_utm[0] - initial_utm[0]
+            rel_y = goal_utm[1] - initial_utm[1]
 
             # Send the goal to move_base and publish the markers for RViz
-            self.send_goal_and_publish_markers(0, 0, utm_x2, utm_y2)
+            self.send_goal_and_publish_markers(0, 0, rel_x, rel_y)
 
     def gps_callback(self, msg):
         """Callback function to handle GPS data."""
@@ -75,12 +88,10 @@ class MoveBaseGoalSender:
         # Create a SimpleActionClient for move_base
         client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         client.wait_for_server()
+
         rospy.loginfo("Connected to move_base action server.")
-
+        
         # Publish the initial and goal poses as PoseStamped messages for RViz
-        initial_marker_pub = rospy.Publisher('initial_pose_marker', PoseStamped, queue_size=10)
-        goal_marker_pub = rospy.Publisher('goal_pose_marker', PoseStamped, queue_size=10)
-
         initial_marker = PoseStamped()
         initial_marker.header.frame_id = "map"
         initial_marker.header.stamp = rospy.Time.now()
@@ -92,13 +103,15 @@ class MoveBaseGoalSender:
         goal_marker.pose = Pose(Point(goal_x, goal_y, 0), Quaternion(0, 0, z, w))
 
         # Wait for the publishers to connect
-        while initial_marker_pub.get_num_connections() < 1 or goal_marker_pub.get_num_connections() < 1:
+        while self.initial_marker_pub.get_num_connections() < 1 or self.goal_marker_pub.get_num_connections() < 1:
             rospy.sleep(0.1)
 
-        initial_marker_pub.publish(initial_marker)
+        self.initial_marker_pub.publish(initial_marker)
+
         rospy.loginfo("Published initial marker at: x={}, y={}".format(initial_x, initial_y))
 
-        goal_marker_pub.publish(goal_marker)
+        self.goal_marker_pub.publish(goal_marker)
+
         rospy.loginfo("Published goal marker at: x={}, y={}".format(goal_x, goal_y))
 
         # Create a MoveBaseGoal
@@ -109,6 +122,7 @@ class MoveBaseGoalSender:
 
         # Send the goal to move_base
         rospy.loginfo("Sending goal: x={}, y={}".format(goal_x, goal_y))
+
         client.send_goal(goal)
         client.wait_for_result()
 
@@ -119,7 +133,14 @@ class MoveBaseGoalSender:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        rospy.logerr("Usage: send_goal_node <goal_latitude> <goal_longitude>")
+        sys.exit(1)
+
+    goal_latitude = float(sys.argv[1])
+    goal_longitude = float(sys.argv[2])
+
     try:
-        MoveBaseGoalSender()
+        MoveBaseGoalSender(goal_latitude, goal_longitude)
     except rospy.ROSInterruptException:
         rospy.logerr("ROS node interrupted")

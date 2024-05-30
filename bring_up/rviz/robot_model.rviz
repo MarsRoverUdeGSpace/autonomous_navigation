@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /TF1/Tree1
         - /Pose2
-        - /Pose3
       Splitter Ratio: 0.3969956934452057
     Tree Height: 719
   - Class: rviz/Selection
@@ -96,17 +95,12 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        lidar_link:
+        middle_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        middle1_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        middle2_link:
+        middle_wheel_2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -138,13 +132,11 @@ Visualization Manager:
           Value: true
         frwheel_link:
           Value: true
-        lidar_link:
-          Value: true
         map:
           Value: true
-        middle1_link:
+        middle_wheel:
           Value: true
-        middle2_link:
+        middle_wheel_2:
           Value: true
         odom:
           Value: true
@@ -169,11 +161,9 @@ Visualization Manager:
                 {}
               frwheel_link:
                 {}
-              lidar_link:
+              middle_wheel:
                 {}
-              middle1_link:
-                {}
-              middle2_link:
+              middle_wheel_2:
                 {}
       Update Interval: 0
       Value: true
@@ -217,12 +207,12 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: true
+      Enabled: false
       Name: Map
       Topic: /map
       Unreliable: false
       Use Timestamp: false
-      Value: true
+      Value: false
     - Alpha: 1
       Axes Length: 1
       Axes Radius: 0.10000000149011612
@@ -245,12 +235,12 @@ Visualization Manager:
       Class: rviz/Pose
       Color: 0; 255; 0
       Enabled: true
-      Head Length: 0.30000001192092896
-      Head Radius: 0.10000000149011612
+      Head Length: 1
+      Head Radius: 1
       Name: Pose
       Queue Size: 10
-      Shaft Length: 1
-      Shaft Radius: 0.05000000074505806
+      Shaft Length: 2.5
+      Shaft Radius: 1
       Shape: Arrow
       Topic: /goal_pose_marker
       Unreliable: false
@@ -269,6 +259,30 @@ Visualization Manager:
       Shaft Radius: 0.05000000074505806
       Shape: Arrow
       Topic: /initial_pose_marker
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 25; 255; 0
+      Enabled: true
+      Head Diameter: 0.30000001192092896
+      Head Length: 0.20000000298023224
+      Length: 0.30000001192092896
+      Line Style: Lines
+      Line Width: 0.029999999329447746
+      Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Queue Size: 10
+      Radius: 0.029999999329447746
+      Shaft Diameter: 0.10000000149011612
+      Shaft Length: 0.10000000149011612
+      Topic: /move_base/TebLocalPlannerROS/local_plan
       Unreliable: false
       Value: true
   Enabled: true
@@ -299,7 +313,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 15.74410343170166
+      Distance: 15.275321006774902
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -307,17 +321,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.13947772979736328
-        Y: 0.05446314811706543
-        Z: 0.4277811050415039
+        X: 112.15545654296875
+        Y: 63.43444061279297
+        Z: 0.5954551696777344
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.339796245098114
+      Pitch: 1.3497965335845947
       Target Frame: <Fixed Frame>
-      Yaw: 4.672158241271973
+      Yaw: 1.8379290103912354
     Saved: ~
 Window Geometry:
   Displays:

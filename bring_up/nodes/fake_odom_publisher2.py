@@ -63,7 +63,7 @@ def main():
     # Create a callback_partial to use parameters in callback function
     callback_partial = functools.partial(callbackOdometry, headerFrame=header, childFrame=child)
     #Subscribe to odometry data
-    rospy.Subscriber("/odom1", Odometry, callback_partial)
+    rospy.Subscriber("/odom", Odometry, callback_partial)
 
     # Create an object type TransformBroadcaster to public dynamic tf
     dynamicBroadcaster = tf.TransformBroadcaster()

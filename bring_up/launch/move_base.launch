@@ -1,8 +1,11 @@
 <launch>
    <master auto="start"/>
 
-   <!--- Run AMCL --> 
-   <!-- <include file="$(find amcl)/examples/amcl_diff.launch"/> -->
+   <!-- Launch the nmea_serial_driver node with specified parameters -->
+    <node name="nmea_serial_driver" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
+        <param name="port" value="/dev/ttyUSB0" />
+        <param name="baud" value="9600" />
+    </node>
 
    <!-- Start move base -->
    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
