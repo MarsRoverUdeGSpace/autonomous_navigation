@@ -21,9 +21,9 @@ class EncoderOdom:
     def __init__(self, ticks_per_meter, base_width):
         self.TICKS_PER_METER = ticks_per_meter
         self.BASE_WIDTH = base_width
-        self.odom1_pub = rospy.Publisher('/odom1', Odometry, queue_size=10)
-        self.odom2_pub = rospy.Publisher('/odom2', Odometry, queue_size=10)
-        self.odom3_pub = rospy.Publisher('/odom3', Odometry, queue_size=10)
+        self.odom1_pub = rospy.Publisher('/odom', Odometry, queue_size=10)
+        # self.odom2_pub = rospy.Publisher('/odom2', Odometry, queue_size=10)
+        # self.odom3_pub = rospy.Publisher('/odom3', Odometry, queue_size=10)
         self.cur_x = 0
         self.cur_y = 0
         self.cur_theta = 0.0
@@ -90,8 +90,8 @@ class EncoderOdom:
         current_time = rospy.Time.now()
         odom = Odometry()
         odom.header.stamp = current_time
-        # odom.header.frame_id = 'odom'
-        odom.header.frame_id = headerID
+        odom.header.frame_id = 'odom'
+        # odom.header.frame_id = headerID
         
         odom.pose.pose.position.x = cur_x
         odom.pose.pose.position.y = cur_y
@@ -105,18 +105,18 @@ class EncoderOdom:
         odom.pose.covariance[28] = 99999
         odom.pose.covariance[35] = 0.01
 
-        # odom.child_frame_id = 'base_link'
-        odom.child_frame_id = childID
+        odom.child_frame_id = 'base_link'
+        # odom.child_frame_id = childID
         odom.twist.twist.linear.x = vx
         odom.twist.twist.linear.y = 0
         odom.twist.twist.angular.z = vth
         odom.twist.covariance = odom.pose.covariance
-        if i == 0:
-            self.odom1_pub.publish(odom)
-        if i == 1:
-            self.odom2_pub.publish(odom)
-        if i == 2:
-            self.odom3_pub.publish(odom)
+        # if i == 0:
+        self.odom1_pub.publish(odom)
+        # if i == 1:
+        #     self.odom2_pub.publish(odom)
+        # if i == 2:
+        #     self.odom3_pub.publish(odom)
 
 
 
@@ -180,13 +180,14 @@ class Node:
         self.TICKS_PER_METER = float(rospy.get_param("~ticks_per_meter", "1220"))
         self.BASE_WIDTH = float(rospy.get_param("~base_width", "0.8"))
 
-        self.encodm1 = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
-        self.encodm2 = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
-        self.encodm3 = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
+        self.encodm = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
+        # self.encodm1 = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
+        # self.encodm2 = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
+        # self.encodm3 = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
         self.last_set_speed_time = rospy.get_rostime()
-        rospy.logwarn("Waiting for topic /joy_roboclaw")
+        # rospy.logwarn("Waiting for topic /joy_roboclaw")
         rospy.logwarn("Waiting for topic /cmd_vel")
-        rospy.wait_for_message("/joy_roboclaw",Joy)
+        # rospy.wait_for_message("/joy_roboclaw",Joy)
         rospy.wait_for_message("/cmd_vel",Twist)
 
         rospy.Subscriber("cmd_vel", Twist, self.drive.cmd_vel_callback)
@@ -214,17 +215,21 @@ class Node:
             dutyRight = int(dutyMax * self.drive.roboclaw_right_speed)
             # print("Left: ",self.drive.roboclaw_left_speed)
             # print("Right: ",self.drive.roboclaw_right_speed)
-            print("Left: ",dutyLeft)
-            print("Right: ",dutyRight)
-            
+            # print("Left: ",dutyLeft)
+            # print("Right: ",dutyRight)
+            self.drive.pub_data(dutyLeft, dutyRight)
+
             for rc in self.drive.rcs:
                 rc.DutyAccelM1M2(self.drive.address, 20000, dutyRight, 20000, dutyLeft)
 
             # self.robo_claw.DutyAccelM1M2(self.address, 200000, dutyRight, 200000, dutyLeft)
     # # # # # # Aqui me quede
             # TODO need find solution to the OSError11 looks like sync problem with serial
-            for i in range(len(self.drive.rcs)):
-                self.encoders(self.drive.rcs[i], i)
+            
+            self.encoders(0)
+            # for i in range(len(self.drive.rcs)):
+            #     self.encoders(i)
+            self.updater.update()
             # status1, enc1, crc1 = None, None, None
             # status2, enc2, crc2 = None, None, None
     
@@ -248,14 +253,14 @@ class Node:
             #     rospy.logdebug(" Encoders %d %d" % (enc1, enc2))
             #     self.encodm.update_publish(enc1, enc2)
 
-                self.updater.update()
             r_time.sleep()
-    def encoders(self, rc, i):
+
+    def encoders(self,i):
         status1, enc1, crc1 = None, None, None
         status2, enc2, crc2 = None, None, None
 
         try:
-            status1, enc1, crc1 = rc.ReadEncM1(self.address)
+            status1, enc1, crc1 = self.drive.rcs[i].ReadEncM1(self.address)
             # rospy.loginfo(enc1)
         except ValueError:
             pass
@@ -264,7 +269,7 @@ class Node:
             rospy.logdebug(e)
             
         try:
-            status2, enc2, crc2 = rc.ReadEncM2(self.address)
+            status2, enc2, crc2 = self.drive.rcs[i].ReadEncM2(self.address)
             # rospy.loginfo(enc2)
         except ValueError:
             pass
@@ -273,13 +278,14 @@ class Node:
             rospy.logdebug(e)
 
         if ('enc1' in vars()) and ('enc2' in vars()):
+            self.encodm.update_publish(enc1, enc2, "odom", "base_link")
             # rospy.loginfo(" Encoders %d %d" % (enc1, enc2))
-            if i == 0:
-                self.encodm1.update_publish(enc1, enc2,"odom"+str(i),"base_link"+str(i),i)
-            if i == 1:
-                self.encodm2.update_publish(enc1, enc2,"odom"+str(i),"base_link"+str(i),i)
-            if i == 2:
-                self.encodm3.update_publish(enc1, enc2,"odom"+str(i),"base_link"+str(i),i)
+            # if i == 0:
+            #     self.encodm1.update_publish(enc1, enc2,"odom"+str(i),"base_link"+str(i),i)
+            # if i == 1:
+            #     self.encodm2.update_publish(enc1, enc2,"odom"+str(i),"base_link"+str(i),i)
+            # if i == 2:
+            #     self.encodm3.update_publish(enc1, enc2,"odom"+str(i),"base_link"+str(i),i)
 
     # TODO: need clean shutdown so motors stop even if new msgs are arriving
     def shutdown(self):

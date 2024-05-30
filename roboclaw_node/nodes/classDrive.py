@@ -5,6 +5,7 @@ import rospy
 from roboclaw_3 import Roboclaw
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
+from std_msgs.msg import Int16MultiArray
 
 class Drive:
     def __init__(self):
@@ -16,6 +17,21 @@ class Drive:
         self.rcs = []
         self.distancia_llantas = 0.8
         self.address = 0x80
+        self.pub = rospy.Publisher("/roboclaw_data", type, queue_size=10)
+        self.message_pub = Int16MultiArray()
+        
+
+    def pub_data(self, left, rigth):
+        for rc in self.rcs:
+            status , currentM1, currentM2 = rc.ReadCurrents(self.address)
+
+            self.message_pub.data.append(rc.ReadMainBatteryVoltage(self.address))
+            self.message_pub.data.append(currentM1)
+            self.message_pub.data.append(currentM2)
+        
+        self.message_pub.data.append(left)
+        self.message_pub.data.append(rigth)
+        self.pub.publish(self.message_pub)
 
     def limit_speed(self, max, left, right):
         if left > max:
