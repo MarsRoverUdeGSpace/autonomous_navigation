@@ -41,7 +41,7 @@ class RoboClawController:
         self.roboclaw_left_speed, self.roboclaw_right_speed = self.limit_speed(max_speed, self.roboclaw_left_speed, self.roboclaw_right_speed)
 
         if self.roboclaw_left_speed !=0 and self.roboclaw_right_speed !=0:
-            self.roboclaw_left_speed, self.roboclaw_right_speed = self.limit_low_speed(0.5, 2, self.roboclaw_left_speed, self.roboclaw_right_speed)
+            self.roboclaw_left_speed, self.roboclaw_right_speed = self.limit_low_speed(1, 2, self.roboclaw_left_speed, self.roboclaw_right_speed)
 
         rospy.loginfo(f"Left Speed: {self.roboclaw_left_speed}" )
         rospy.loginfo(f"Right Speed: {self.roboclaw_right_speed}")

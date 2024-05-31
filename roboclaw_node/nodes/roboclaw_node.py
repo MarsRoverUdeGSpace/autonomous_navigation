@@ -157,7 +157,7 @@ class Node:
         # TODO need someway to check if address is correct
 
         try:
-            self.drive.openRcs(1,"/dev/ttyACM",baud_rate)
+            self.drive.openRcs(3,"/dev/ttyACM",baud_rate)
         except Exception as e:
             rospy.logfatal("Could not connect to Roboclaw")
             rospy.loginfo(e)
@@ -190,7 +190,7 @@ class Node:
         # rospy.logwarn("Waiting for topic /joy_roboclaw")
         rospy.logwarn("Waiting for topic /cmd_vel")
         # rospy.wait_for_message("/joy_roboclaw",Joy)
-        rospy.wait_for_message("/cmd_vel",Twist)
+        #rospy.wait_for_message("/cmd_vel",Twist)
 
         rospy.Subscriber("cmd_vel", Twist, self.drive.cmd_vel_callback)
         rospy.Subscriber("/joy_roboclaw",Joy, self.drive.joy_callback)
@@ -211,17 +211,24 @@ class Node:
             self.drive.roboclaw_left_speed = self.drive.roboclaw_left_speed/2
             self.drive.roboclaw_right_speed = self.drive.roboclaw_right_speed/2
             self.drive.voltageBattery = self.drive.meanVoltage()
+            # self.drive.reads()
             dutyMax = (32767/self.drive.voltageBattery)*self.drive.maxVoltage*10
             dutyLeft = int(dutyMax * self.drive.roboclaw_left_speed)
             dutyRight = int(dutyMax * self.drive.roboclaw_right_speed)
+            if dutyLeft > 16000:
+                dutyLeft = 16000
+            if dutyRight > 16000:
+                dutyRight = 16000
             # print("Left: ",self.drive.roboclaw_left_speed)
             # print("Right: ",self.drive.roboclaw_right_speed)
             # print("Left: ",dutyLeft)
             # print("Right: ",dutyRight)
             self.drive.pub_data(dutyLeft, dutyRight)
+            print("Duty left: ", dutyLeft)
+            print("Duty right: ", dutyRight)
 
             for rc in self.drive.rcs:
-                rc.DutyAccelM1M2(self.drive.address, 20000, dutyRight, 20000, dutyLeft)
+                rc.DutyAccelM1M2(self.drive.address, 100000, dutyLeft, 100000, dutyRight)
 
             # self.robo_claw.DutyAccelM1M2(self.address, 200000, dutyRight, 200000, dutyLeft)
     # # # # # # Aqui me quede
@@ -233,7 +240,7 @@ class Node:
             self.updater.update()
             # status1, enc1, crc1 = None, None, None
             # status2, enc2, crc2 = None, None, None
-    
+
             # try:
             #     status1, enc1, crc1 = self.robo_claw.ReadEncM1(self.address)
             # except ValueError:
@@ -241,7 +248,7 @@ class Node:
             # except OSError as e:
             #     rospy.logwarn("ReadEncM1 OSError: %d", e.errno)
             #     rospy.logdebug(e)
-                
+
             # try:
             #     status2, enc2, crc2 = self.robo_claw.ReadEncM2(self.address)
             # except ValueError:

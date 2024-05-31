@@ -12,13 +12,13 @@ class Drive:
         self.roboclaw_left_speed = 0
         self.roboclaw_right_speed = 0
         self.mode = 1
-        self.maxVoltage = 12
-        self.voltageBattery = 24
+        self.maxVoltage = 15
+        self.voltageBattery = 25
         self.rcs = []
         self.distancia_llantas = 0.8
         self.address = 0x80
         self.pub = rospy.Publisher("/roboclaw_data", Int16MultiArray, queue_size=10)
-        
+
 
     def pub_data(self, left, rigth):
         self.message_pub = Int16MultiArray()
@@ -95,7 +95,7 @@ class Drive:
         self.roboclaw_left_speed, self.roboclaw_right_speed = self.limit_speed(max_speed, self.roboclaw_left_speed, self.roboclaw_right_speed)
 
         if self.roboclaw_left_speed !=0 and self.roboclaw_right_speed !=0:
-            self.roboclaw_left_speed, self.roboclaw_right_speed = self.limit_low_speed(0.5, 2, self.roboclaw_left_speed, self.roboclaw_right_speed)
+            self.roboclaw_left_speed, self.roboclaw_right_speed = self.limit_low_speed(1.5, 2, self.roboclaw_left_speed, self.roboclaw_right_speed)
 
         rospy.loginfo(f"Left Speed: {self.roboclaw_left_speed}" )
         rospy.loginfo(f"Right Speed: {self.roboclaw_right_speed}")
