@@ -40,8 +40,8 @@
   
   <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-      <leftJoint>base_to_middle_wheel</leftJoint>
-      <rightJoint>base_to_middle_wheel_2</rightJoint>
+      <leftJoint>base_to_middle1_link</leftJoint>
+      <rightJoint>base_to_middle2_link</rightJoint>
       <wheelSeparation>0.7</wheelSeparation>
       <wheelDiameter>0.33</wheelDiameter>
       <torque>5000</torque>  
@@ -68,7 +68,7 @@
 
   <transmission name="tran5">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="base_to_middle_wheel">
+    <joint name="base_to_middle1_link">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor5">
@@ -78,7 +78,7 @@
   
   <transmission name="tran6">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="base_to_middle_wheel_2">
+    <joint name="base_to_middle2_link">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor6">
@@ -148,8 +148,8 @@
 
   <gazebo>
     <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-      <leftJoint>base_to_middle_wheel</leftJoint>
-      <rightJoint>base_to_middle_wheel_2</rightJoint>
+      <leftJoint>base_to_middle1_link</leftJoint>
+      <rightJoint>base_to_middle2_link</rightJoint>
       <wheelSeparation>0.7</wheelSeparation>
       <wheelDiameter>0.33</wheelDiameter>
       <torque>5000</torque>  
@@ -177,7 +177,7 @@
   <!-- Transmission left wheel-->
   <transmission name="tran1">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="base_to_middle_wheel">
+    <joint name="base_to_middle1_link">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor5">
@@ -188,7 +188,7 @@
   <!-- transmission right wheel-->
   <transmission name="tran2">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="base_to_middle_wheel_2">
+    <joint name="base_to_middle2_link">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor6">

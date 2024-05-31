@@ -28,7 +28,7 @@
         <node name="rviz" pkg="rviz" type="rviz" args="-d $(find bring_up)/rviz/robot_model.rviz"/>
         
         <!-- Robot description (ilhuacamina)-->
-        <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find bring_up)/URDF/QT1.xacro'"/>
+        <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find bring_up)/URDF/ilhuicamina_simplified.xacro'"/>
         <node name="robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
                 args="-urdf -param robot_description -model QT1 "/>
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">

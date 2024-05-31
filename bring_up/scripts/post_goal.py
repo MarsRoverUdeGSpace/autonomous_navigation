@@ -30,7 +30,7 @@ class MoveBaseGoalSender:
 
         ros_command = ['rosrun', 'bring_up', 'change_led_color.py', "blue"]
         subprcs = subprocess.Popen(ros_command)
-        rospy.sleep(0.5)
+        rospy.sleep(1)
         subprcs.terminate()
 
         # Initialize variables to store the initial GPS coordinates
@@ -143,6 +143,7 @@ class MoveBaseGoalSender:
             subprcs = subprocess.Popen(ros_command)
             rospy.sleep(0.5)
             subprcs.terminate()
+            rospy.sleep(3)
             
         else:
             rospy.logwarn("Failed to reach the goal")

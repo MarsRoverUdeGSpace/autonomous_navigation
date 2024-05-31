@@ -609,7 +609,7 @@
  
 
     <!--LLANTA IZQUIERDA ENMEDIO-->
-    <link name="middle_wheel">
+    <link name="middle1_link">
         <inertial>
             <mass value="${wheel_mass}"/>
             <origin rpy="0 ${PI_2} ${PI_2}" xyz="0 0 0"/>
@@ -638,9 +638,9 @@
         </collision>
     </link>
 
-    <joint name="base_to_middle_wheel" type="continuous">
+    <joint name="base_to_middle1_link" type="continuous">
         <parent link="base_link"/>
-        <child link="middle_wheel"/>
+        <child link="middle1_link"/>
         <origin rpy="${PI_2} 0 0" xyz="-0.037 0.375 0"/>
         <axis rpy="0 0 0" xyz="0 0 -1"/>
         <limit effort="10000" velocity="1000"/>
@@ -733,7 +733,7 @@
     
 
     <!--LLANTA DERECHA ENMEDIO-->
-    <link name="middle_wheel_2">
+    <link name="middle2_link">
         <inertial>
             <mass value="${wheel_mass}"/>
             <origin rpy="0 ${PI_2} ${PI_2}" xyz="0 0 0"/>
@@ -762,9 +762,9 @@
         </collision>
     </link>
 
-    <joint name="base_to_middle_wheel_2" type="continuous">
+    <joint name="base_to_middle2_link" type="continuous">
         <parent link="base_link"/>
-        <child link="middle_wheel_2"/>
+        <child link="middle2_link"/>
         <origin rpy="${PI_2} 0 0" xyz="-0.037 -0.352 0"/>
         <axis rpy="0 0 0" xyz="0 0 -1"/>
         <limit effort="10000" velocity="1000"/>
