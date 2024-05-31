@@ -8,6 +8,7 @@ from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from geometry_msgs.msg import Pose, Point, Quaternion, PoseStamped
 from sensor_msgs.msg import NavSatFix
 import utm
+import subprocess
 
 infoApi = {
     "goal_node" : "send_goal_node is shutdown",
@@ -23,8 +24,14 @@ infoApi = {
 
 class MoveBaseGoalSender:
     def __init__(self, goal_lat, goal_lon):
+
         rospy.init_node('send_goal_node')
         rospy.loginfo("send_goal_node started.")
+
+        ros_command = ['rosrun', 'bring_up', 'change_led_color.py', "blue"]
+        subprcs = subprocess.Popen(ros_command)
+        rospy.sleep(0.5)
+        subprcs.terminate()
 
         # Initialize variables to store the initial GPS coordinates
         self.initial_lat = None
@@ -124,12 +131,24 @@ class MoveBaseGoalSender:
         rospy.loginfo("Sending goal: x={}, y={}".format(goal_x, goal_y))
 
         client.send_goal(goal)
+        #! Probando
+        ros_command = ['rosrun', 'bring_up', 'change_led_color.py', "red"]
+        subprcs = subprocess.Popen(ros_command)
         client.wait_for_result()
+        subprcs.terminate()
 
         if client.get_state() == actionlib.GoalStatus.SUCCEEDED:
             rospy.loginfo("Goal reached successfully")
+            ros_command = ['rosrun', 'bring_up', 'change_led_color.py', "green"]
+            subprcs = subprocess.Popen(ros_command)
+            rospy.sleep(0.5)
+            subprcs.terminate()
+            
         else:
             rospy.logwarn("Failed to reach the goal")
+        
+        ros_command = ['rosrun', 'bring_up', 'change_led_color.py', "blue"]
+        subprocess.Popen(ros_command)
 
 
 if __name__ == "__main__":

@@ -21,8 +21,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             rospy.init_node('gui_node', anonymous=True, disable_signals=True)
 
         # Prepare the ROS node execution command with arguments
-        ros_command = ['rosrun', 'bring_up', 'post_goal.py', 
-                       arg_latitude, arg_longitude]
+        ros_command = ['rosrun', 'bring_up', 'post_goal.py', arg_latitude, arg_longitude]
 
         # Execute the ROS node with the arguments
         subprocess.Popen(ros_command)

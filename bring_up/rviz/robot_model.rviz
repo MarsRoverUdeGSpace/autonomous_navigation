@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /TF1/Tree1
-        - /Pose2
       Splitter Ratio: 0.3969956934452057
     Tree Height: 719
   - Class: rviz/Selection
@@ -119,25 +118,25 @@ Visualization Manager:
       Frames:
         All Enabled: false
         ZED_depth_link:
-          Value: true
+          Value: false
         ZED_link:
           Value: true
         base_link:
           Value: true
         blwheel_link:
-          Value: true
+          Value: false
         brwheel_link:
-          Value: true
+          Value: false
         flwheel_link:
-          Value: true
+          Value: false
         frwheel_link:
-          Value: true
+          Value: false
         map:
           Value: true
         middle_wheel:
-          Value: true
+          Value: false
         middle_wheel_2:
-          Value: true
+          Value: false
         odom:
           Value: true
       Marker Alpha: 1
@@ -145,7 +144,7 @@ Visualization Manager:
       Name: TF
       Show Arrows: false
       Show Axes: true
-      Show Names: false
+      Show Names: true
       Tree:
         map:
           odom:
@@ -282,7 +281,7 @@ Visualization Manager:
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
-      Topic: /move_base/TebLocalPlannerROS/local_plan
+      Topic: /move_base/TebLocalPlannerROS/global_plan
       Unreliable: false
       Value: true
   Enabled: true
@@ -313,7 +312,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 15.275321006774902
+      Distance: 13.841078758239746
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -321,17 +320,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 112.15545654296875
-        Y: 63.43444061279297
-        Z: 0.5954551696777344
+        X: 0.15289306640625
+        Y: 0.009773731231689453
+        Z: 0.5913891792297363
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.3497965335845947
+      Pitch: 0.8799246549606323
       Target Frame: <Fixed Frame>
-      Yaw: 1.8379290103912354
+      Yaw: 0.9450874328613281
     Saved: ~
 Window Geometry:
   Displays:
